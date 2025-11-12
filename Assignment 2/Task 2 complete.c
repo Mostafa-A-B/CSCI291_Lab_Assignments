@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #define NumOfSubjects 8
-#define NumOfStudents 5
+#define NumOfStudents 300
 #ifdef _WIN32
 #define strcasecmp _stricmp
 #define CLEAR "cls"
@@ -15,11 +15,11 @@ typedef struct{
     char Fname[25], Lname[25], grade[10];
     int ID, FinalMark;
     float marks[NumOfSubjects];
-}student;
+}student;//creating struct, assigning attributes, naming struct
 
 void DispStudent(student *stu){
     printf("Student Details:\nFirst Name: %s\nLast Name: %s\nStudent ID: %d\nSubject Marks:\n", stu->Fname, stu->Lname, stu->ID);
-    for(int i=0; i<NumOfSubjects; i++){
+    for(int i=0; i<NumOfSubjects; i++){//for loop to make the code for printing the subject marks more readable
         switch(i){
             case 0:
             printf("  Math: ");
@@ -49,7 +49,7 @@ void DispStudent(student *stu){
         printf("%.2f", stu->marks[i]);
     }
     printf("\nAggregate Mark: %d\nGrade: %s", stu->FinalMark ,stu->grade);
-}
+}//function to print to console the values of the attributes in the passed student object
 
 void grading(student *stu){
     int final = stu->FinalMark;
@@ -66,33 +66,33 @@ void grading(student *stu){
     }else if(final==-1){
         strcpy(stu->grade, "undefined");
     }
-}
+}//function to assign/update the grade of the passed student using their final(Aggregate) mark
 
 void aggregate(student *stu){
     int graded = 1;
-    for(int i=0; i<NumOfSubjects; i++){
+    for(int i=0; i<NumOfSubjects; i++){//sets graded to 0 if any subject doesnt have a mark
         if(stu->marks[i]==-1){
             graded = 0;
             break;
         }
     }
-    if(graded){
+    if(graded){//calculates the final mark by getting the mean average of all subject marks
         float final=0;
         for(int i=0; i<NumOfSubjects; i++){
             final+=stu->marks[i];
         }
         stu->FinalMark = (int)(final/NumOfSubjects);
-    } else{
+    } else{//sets final mark to -1 if any subject doesnt have a mark
         stu->FinalMark = -1;
     }
-    grading(stu);
-}
+    grading(stu);//calls the grading function to set the grade attribute for the student based on the new final mark
+}//function to calculate the final(Aggregate) mark of the passed student by looping through the marks attribute elements
 
 void enroll(student arr[], int index){
     int c;
     system(CLEAR);
     printf("Enter Student ID: ");
-    while(scanf("%d", &arr[index].ID)!=1){
+    while(scanf("%d", &arr[index].ID)!=1){//reprompts the user and clears the buffer in case of an invalid input
         printf("\nInput Datatype Invalid!\nEnter Student ID: ");
         while ((c = getchar()) != '\n' && c != EOF) { }
     }
@@ -101,7 +101,7 @@ void enroll(student arr[], int index){
     printf("\nEnter Student Last Name: ");
     scanf(" %24s", arr[index].Lname);
     char choice[4];
-    for(int i=0; i<NumOfSubjects; i++){
+    for(int i=0; i<NumOfSubjects; i++){//for loop to take and set the mark for every subject
         switch(i){
             case 0:
             printf("\nEnter marks for Math? (Yes/No): ");
@@ -128,7 +128,7 @@ void enroll(student arr[], int index){
             printf("\nEnter marks for Computer Science? (Yes/No): ");
             break;
         }
-        while(1){
+        while(1){//loop to ask if the user wants to assign a subject mark, reprompts if input is invalid
             scanf(" %3s", choice);
             if(strcasecmp(choice, "yes")==0 || strcasecmp(choice, "y")==0){
                 printf("\nMark: ");
@@ -153,9 +153,9 @@ void enroll(student arr[], int index){
         }
         
     }
-    aggregate(&arr[index]);
+    aggregate(&arr[index]);//calls the aggregate function to set the final mark attribute for the created student
     system(CLEAR);
-}
+}//function to take user input and assign it to a new student object in the passed student array
 
 void ModifyStudent(student *stu){
     char modify, fname[25], lname[25];
@@ -354,7 +354,7 @@ void ModifyStudent(student *stu){
             printf("\n\nError: Invalid Input\nPlease Enter a Valid Option!");
     }
     aggregate(stu);
-}
+}//function to allow the user to modify the first 4 attributes of the passed student object
 
 void SearchUpdate(student arr[], int enrolled){
     char SearchType;
@@ -369,7 +369,7 @@ void SearchUpdate(student arr[], int enrolled){
             printf("\n\nError: Invalid Input\nPlease Enter a Valid Option!");
     }
     system(CLEAR);
-    switch(SearchType){
+    switch(SearchType){//switch case statement to search based on user selection, case flowover is used to allow for uppercase inputs
         case 'N':
         case 'n':{
             char name[25];
@@ -418,12 +418,12 @@ void SearchUpdate(student arr[], int enrolled){
         }
     }
     system(CLEAR);
-}
+}//function to search for a particular student based on user input and, if found, pass the student to the modify function
 
 void TopStudents(student arr[], int enrolled){
     system(CLEAR);
     int top = -1, c;
-    for(int i=0; i<enrolled; i++){
+    for(int i=0; i<enrolled; i++){//loops through enrolled students and updates top with the highest final mark
         if(arr[i].FinalMark>top){
             top = arr[i].FinalMark;
         }
@@ -436,11 +436,11 @@ void TopStudents(student arr[], int enrolled){
             puts("");
         }
     }
-    while ((c = getchar()) != '\n' && c != EOF) { }
+    while ((c = getchar()) != '\n' && c != EOF) { }//clears buffer to make sure the user is the one to continue by pressing enter
     printf("\n\nPress ENTER to Continue!");
     getchar();
     system(CLEAR);
-}
+}//function that loops through all enrolled students in the passed student array and finds the highest final mark, then prints to console the details of every student that has the hieghest final mark
 
 
 
@@ -496,5 +496,5 @@ int main(){
     
     
     return 0;
-}
+}//main function with a simple menu system to navigate the user to the available functions
 
